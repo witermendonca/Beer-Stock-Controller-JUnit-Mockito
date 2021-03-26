@@ -3,6 +3,7 @@ package com.controller.beerstock.controller;
 import com.controller.beerstock.dto.BeerDTO;
 import com.controller.beerstock.entity.Beer;
 import com.controller.beerstock.exception.BeerAlreadyRegisteredException;
+import com.controller.beerstock.exception.BeerNotFoundException;
 import com.controller.beerstock.repository.BeerRepository;
 import com.controller.beerstock.service.BeerService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,6 @@ public class BeerController {
 
     private final BeerService beerService;
 
-    private BeerRepository beerRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -30,7 +30,23 @@ public class BeerController {
     }
 
     @GetMapping
-    public List<Beer> listAllBeers(){
-        return beerRepository.findAll();
+    public List<BeerDTO> listAllBeers(){
+        return beerService.listAll();
+    }
+
+    @GetMapping("/name/{name}")
+    public BeerDTO findByName(@PathVariable String name) throws BeerNotFoundException {
+        return beerService.findByName(name);
+    }
+
+    @GetMapping("/{id}")
+    public BeerDTO findById(@PathVariable Long id) throws BeerNotFoundException {
+        return beerService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) throws BeerNotFoundException {
+        beerService.deleteById(id);
     }
 }
