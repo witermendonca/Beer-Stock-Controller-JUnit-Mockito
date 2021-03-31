@@ -2,11 +2,10 @@ package com.controller.beerstock.controller;
 
 import com.controller.beerstock.dto.BeerDTO;
 import com.controller.beerstock.dto.QuantityDTO;
-import com.controller.beerstock.entity.Beer;
 import com.controller.beerstock.exception.BeerAlreadyRegisteredException;
 import com.controller.beerstock.exception.BeerNotFoundException;
-import com.controller.beerstock.exception.BeerStockExceededException;
-import com.controller.beerstock.repository.BeerRepository;
+import com.controller.beerstock.exception.BeerStockExceededExceptionOnDecrement;
+import com.controller.beerstock.exception.BeerStockExceededExceptionOnIncrement;
 import com.controller.beerstock.service.BeerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,12 @@ public class BeerController {
     }
 
     @PatchMapping("/{id}/increment")
-    public BeerDTO increment(@PathVariable Long id,@RequestBody @Valid QuantityDTO quantityDTO) throws BeerNotFoundException, BeerStockExceededException {
+    public BeerDTO increment(@PathVariable Long id,@RequestBody @Valid QuantityDTO quantityDTO) throws BeerNotFoundException, BeerStockExceededExceptionOnIncrement {
         return beerService.increment(id, quantityDTO.getQuantity());
+    }
+
+    @PatchMapping("/{id}/decrement")
+    public BeerDTO decrement(@PathVariable Long id,@RequestBody @Valid QuantityDTO quantityDTO) throws BeerNotFoundException, BeerStockExceededExceptionOnDecrement {
+        return beerService.decrement(id, quantityDTO.getQuantity());
     }
 }

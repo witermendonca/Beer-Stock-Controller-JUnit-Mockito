@@ -8,3 +8,7 @@ Tópicos abordados:
 * Principais frameworks para testes unitários em Java: JUnit, Mockito e Hamcrest. 
 * Desenvolvimento de testes unitários para validação de funcionalides básicas: criação, listagem, consulta por nome e exclusão de cervejas.
 * TDD: Incremento e decremento do número de cervejas no estoque.
+
+Documentação Swagger:
+
+* http://localhost:8080/swagger-ui.html
