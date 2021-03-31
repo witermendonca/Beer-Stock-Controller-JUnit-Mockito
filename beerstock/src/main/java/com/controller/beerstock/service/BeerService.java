@@ -4,6 +4,7 @@ import com.controller.beerstock.dto.BeerDTO;
 import com.controller.beerstock.entity.Beer;
 import com.controller.beerstock.exception.BeerAlreadyRegisteredException;
 import com.controller.beerstock.exception.BeerNotFoundException;
+import com.controller.beerstock.exception.BeerStockExceededException;
 import com.controller.beerstock.mapper.BeerMapper;
 import com.controller.beerstock.repository.BeerRepository;
 import lombok.AllArgsConstructor;
@@ -69,4 +70,19 @@ public class BeerService {
                 .orElseThrow(() -> new BeerNotFoundException(id));
     }
 
+    public BeerDTO increment(Long id, Integer quantityToIncrement) throws BeerNotFoundException, BeerStockExceededException {
+
+        Beer  beerToIncrementStock = verifyIfExists(id);
+
+        int quantityAfterIncrement = quantityToIncrement + beerToIncrementStock.getQuantity();
+
+        if (quantityAfterIncrement <= beerToIncrementStock.getMax()) {
+            beerToIncrementStock.setQuantity(beerToIncrementStock.getQuantity() + quantityToIncrement);
+            Beer incrementedBeerStock = beerRepository.save(beerToIncrementStock);
+            return beerMapper.toDTO(incrementedBeerStock);
+        }
+
+        throw new BeerStockExceededException(id, quantityToIncrement);
+
+    }
 }
